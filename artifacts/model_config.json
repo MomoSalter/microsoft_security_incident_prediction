@@ -1,0 +1,1 @@
+{"input_dim": 154, "num_classes": 3, "classes": ["BenignPositive", "FalsePositive", "TruePositive"], "best_val_f1": 0.676280249757581, "test_f1": 0.6572008288489412}
