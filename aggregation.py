@@ -16,7 +16,7 @@ ENTITY_ID_COLS   = [
 CATEGORICAL_COLS = [
     'Category', 'MitreTechniques', 'EntityType',
     'EvidenceRole', 'SuspicionLevel', 'LastVerdict','ThreatFamily',
-    'ResourceType', 'AntispamDirection', 'Roles',               
+    'ResourceType', 'AntispamDirection', 'Roles',  'ActionGrouped', 'ActionGranular'             
 ]
 
 def categorical_feature_mapping(data):
@@ -98,3 +98,16 @@ def aggregate_incidents(df, include_target=True):
     result = result.drop(columns=['OrgId'])
 
     return result
+
+def de_aggregate_map(feature_cols: list) -> dict:
+
+    groups = {
+        "Timestamp" : ["duration_seconds", "hour_of_day", "day_of_week"],
+        "OrgId" : ["org_rate_BenignPositive", "org_rate_FalsePositive", "org_rate_TruePositive", "org_incident_count"],
+        "evidence_count" : ["evidence_count"],
+        **{col: [f"{col}_nunique"] for col in ENTITY_ID_COLS},
+    }
+    for col in CATEGORICAL_COLS:
+        groups[col] = [f for f in feature_cols if f.startswith(col + "_")]
+
+    return groups
