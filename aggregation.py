@@ -43,10 +43,13 @@ def organization_stats(data):
     org_stats = org_grade.merge(org_size, on='OrgId')
     return org_stats
 
-def aggregate_incidents(df, include_target=True):
-    with open("artifacts/cat_mappings.json") as f:
-        mappings = json.load(f)
-    org_stats = pd.read_parquet("artifacts/org_stats.parquet")
+def aggregate_incidents(df, include_target=True, mappings=None, org_stats=None):
+    if mappings is None:
+        with open("artifacts/cat_mappings.json") as f:
+            mappings = json.load(f)
+    
+    if org_stats is None:
+        org_stats = pd.read_parquet("artifacts/org_stats.parquet")
 
     result = []
     grouped = df.groupby(INCIDENT_KEY)
